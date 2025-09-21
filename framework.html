@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Test Automation Dashboard</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg,#1e3c72 0%,#2a5298 100%); color:white; min-height:100vh; overflow-x:auto; }
+.container { max-width:1400px; margin:0 auto; padding:20px; }
+.header { text-align:center; margin-bottom:40px; }
+.header h1 { font-size:2.5em; margin-bottom:10px; background: linear-gradient(45deg,#00f2fe,#4facfe); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.tabs { display:flex; justify-content:center; margin-bottom:30px; background: rgba(255,255,255,0.1); border-radius:50px; padding:5px; backdrop-filter:blur(10px); flex-wrap:wrap; gap:5px; }
+.tab { padding:12px 24px; background:transparent; border:none; color:white; cursor:pointer; border-radius:50px; transition:all 0.3s ease; font-weight:500; }
+.tab.active { background: linear-gradient(45deg,#00f2fe,#4facfe); box-shadow:0 4px 15px rgba(79,172,254,0.3); }
+.tab-content { display:none; animation:fadeIn 0.5s ease-in; }
+.tab-content.active { display:block; }
+@keyframes fadeIn { from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);} }
+.architecture-diagram { display:flex; flex-direction:column; align-items:center; gap:30px; margin:40px 0; }
+.layer { background:rgba(255,255,255,0.1); border-radius:20px; padding:25px; backdrop-filter:blur(15px); border:1px solid rgba(255,255,255,0.2); min-width:300px; text-align:center; transition:all 0.5s ease, transform 0.5s ease; cursor:pointer; opacity:0; transform:translateY(20px); }
+.layer.show { opacity:1; transform:translateY(0); }
+.layer h3 { color:#00f2fe; margin-bottom:15px; font-size:1.4em; }
+.layer-description { margin-bottom:15px; line-height:1.6; }
+.tools { display:flex; flex-wrap:wrap; gap:8px; justify-content:center; }
+.tool { background: linear-gradient(45deg,#667eea,#764ba2); padding:6px 12px; border-radius:20px; font-size:0.85em; font-weight:500; }
+.flow-arrows { display:flex; justify-content:center; align-items:center; margin:-10px 0; }
+.arrow { font-size:2em; color:#4facfe; animation:pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:0.6;}50%{opacity:1;} }
+.orchestration { background: linear-gradient(45deg,#ff6b6b,#ee5a24); margin-top:20px; border:2px solid rgba(255,255,255,0.3); }
+.tech-stack { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:20px; margin:30px 0; }
+.tech-category { background: rgba(255,255,255,0.1); border-radius:15px; padding:20px; backdrop-filter:blur(10px); transition:all 0.3s ease; }
+.tech-category h4 { color:#4facfe; margin-bottom:15px; font-size:1.2em; }
+.tech-list { display:flex; flex-wrap:wrap; gap:8px; max-height:200px; overflow-y:auto; }
+.tech-item { background:linear-gradient(45deg,#00c6ff,#0072ff); padding:8px 16px; border-radius:25px; font-size:0.9em; font-weight:500; transition:transform 0.2s ease; }
+.tech-item:hover { transform:scale(1.05); }
+.search-box { width:100%; padding:8px 12px; border-radius:20px; border:none; margin-bottom:15px; font-size:1em; }
+.workflow { display:flex; flex-direction:column; gap:10px; margin:30px 0; }
+.workflow-step { display:flex; align-items:flex-start; background: rgba(255,255,255,0.1); border-radius:15px; padding:15px 20px; backdrop-filter:blur(10px); cursor:pointer; transition:all 0.3s ease; flex-direction:column; }
+.workflow-step:hover { background: rgba(255,255,255,0.15); }
+.step-number { background: linear-gradient(45deg,#ff6b6b,#ee5a24); width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; margin-bottom:10px; flex-shrink:0; }
+.step-content { display:none; flex-direction:column; }
+.step-content.show { display:flex; margin-top:10px; }
+.step-content h4 { color:#4facfe; margin-bottom:8px; }
+.benefits { display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:20px; margin:30px 0; }
+.benefit-card { background: rgba(255,255,255,0.1); border-radius:15px; padding:25px; backdrop-filter:blur(10px); text-align:center; transition:all 0.3s ease, transform 0.3s ease; }
+.benefit-card:hover { transform:translateY(-5px); background: rgba(255,255,255,0.15); }
+.benefit-icon { font-size:2.5em; margin-bottom:15px; display:block; }
+.implementation-guide { background: rgba(255,255,255,0.1); border-radius:20px; padding:30px; margin:30px 0; backdrop-filter:blur(10px); }
+.code-block { background: rgba(0,0,0,0.3); border-radius:10px; padding:20px; margin:15px 0; font-family:'Courier New', monospace; overflow-x:auto; }
+.highlight { color:#4facfe; font-weight:bold; }
+@media (max-width:768px) { .container{padding:10px;} .tab{padding:8px 16px; font-size:0.9em;} .header h1{font-size:2em;} }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🤖 AI Test Automation Dashboard</h1>
+        <p>End-to-End Intelligent Test Automation with Multi-Agent Architecture</p>
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" onclick="showTab('architecture')">Architecture</button>
+        <button class="tab" onclick="showTab('technology')">Tech Stack</button>
+        <button class="tab" onclick="showTab('workflow')">Workflow</button>
+        <button class="tab" onclick="showTab('benefits')">Benefits</button>
+        <button class="tab" onclick="showTab('implementation')">Implementation</button>
+    </div>
+
+    <div id="architecture" class="tab-content active">
+        <div class="architecture-diagram">
+            <div class="layer" onclick="showDetails('requirement')">
+                <h3>🎯 Requirement & Test Design Layer</h3>
+                <div class="layer-description">Connects to JIRA API, fetches requirements, and uses NLP to generate intelligent test cases</div>
+                <div class="tools"><span class="tool">JIRA API</span><span class="tool">HuggingFace T5/BERT</span><span class="tool">Xray Integration</span></div>
+            </div>
+            <div class="flow-arrows"><span class="arrow">↓</span></div>
+            <div class="layer" onclick="showDetails('execution')">
+                <h3>⚡ Test Execution Layer</h3>
+                <div class="layer-description">Dynamic execution engine selection based on test type with multi-platform support</div>
+                <div class="tools"><span class="tool">Selenium</span><span class="tool">Playwright</span><span class="tool">PyTest</span><span class="tool">Postman CLI</span><span class="tool">JMeter</span></div>
+            </div>
+            <div class="flow-arrows"><span class="arrow">↓</span></div>
+            <div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center;">
+                <div class="layer" onclick="showDetails('defect')" style="flex:1; min-width:280px;">
+                    <h3>🐛 Defect Management Layer</h3>
+                    <div class="layer-description">Auto-creates defects with full traceability and evidence capture</div>
+                    <div class="tools"><span class="tool">JIRA Defects</span><span class="tool">Screenshots</span><span class="tool">Log Capture</span></div>
+                </div>
+                <div class="layer" onclick="showDetails('reporting')" style="flex:1; min-width:280px;">
+                    <h3>📊 Reporting & Analytics Layer</h3>
+                    <div class="layer-description">Real-time dashboards, KPIs, and automated report distribution</div>
+                    <div class="tools"><span class="tool">Plotly</span><span class="tool">Streamlit</span><span class="tool">Slack/Email</span><span class="tool">Confluence</span></div>
+                </div>
+            </div>
+            <div class="flow-arrows"><span class="arrow">↑</span></div>
+            <div class="layer orchestration" onclick="showDetails('orchestration')">
+                <h3>🎛️ Orchestration & Control Layer</h3>
+                <div class="layer-description">Multi-agent coordination using LangGraph with error recovery and distributed execution</div>
+                <div class="tools"><span class="tool">LangGraph</span><span class="tool">MCP/ACP</span><span class="tool">Retry Logic</span><span class="tool">Error Recovery</span></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="technology" class="tab-content">
+        <input type="text" id="techSearch" class="search-box" placeholder="🔍 Search Tech Stack...">
+        <div class="tech-stack"></div>
+    </div>
+
+    <div id="workflow" class="tab-content"><div class="workflow"></div></div>
+    <div id="benefits" class="tab-content"><div class="benefits"></div></div>
+
+    <div id="implementation" class="tab-content">
+        <div class="implementation-guide">
+            <h3>🚀 Implementation Roadmap</h3>
+            <h4>Phase 1: Foundation Setup (Weeks 1-2)</h4>
+            <div class="code-block">
+<span class="highlight"># Core Framework Setup</span><br>
+pip install langchain langgraph transformers torch<br>
+pip install selenium playwright pytest requests<br>
+pip install jira confluence-python-api plotly streamlit<br><br>
+<span class="highlight"># JIRA Integration</span><br>
+from jira import JIRA<br>
+jira_client = JIRA(server='https://company.atlassian.net', basic_auth=('user','token'))<br><br>
+<span class="highlight"># HuggingFace Model Loading</span><br>
+from transformers import T5ForConditionalGeneration, T5Tokenizer<br>
+model = T5ForConditionalGeneration.from_pretrained('t5-base')<br>
+tokenizer = T5Tokenizer.from_pretrained('t5-base')
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const frameworkData = {
+    techStack: [
+        { category: "🐍 Core Language & Framework", items: ["Python 3.9+", "Docker", "Kubernetes"] },
+        { category: "🤖 AI/ML & NLP", items: ["HuggingFace Transformers", "T5 Model", "BERT", "LangChain"] },
+        { category: "🔧 Test Execution Tools", items: ["Selenium","Playwright","PyTest","Postman CLI","JMeter"] },
+        { category: "🔄 Orchestration & Control", items: ["LangGraph","Celery","Redis"] },
+        { category: "📈 Reporting & Visualization", items: ["Plotly","Streamlit","Power BI","Grafana"] },
+        { category: "🔗 Integration & APIs", items: ["JIRA REST API","Xray API","Confluence API","Slack API"] }
+    ],
+    workflow: [
+        { step:1,title:"Requirement Ingestion", description:"Fetch Epics, Features, User Stories from JIRA." },
+        { step:2,title:"AI-Powered Test Design", description:"Generate test cases using HuggingFace NLP models." },
+        { step:3,title:"Test Case Integration", description:"Push test cases to JIRA/Xray automatically." },
+        { step:4,title:"Dynamic Test Execution", description:"Select execution engine dynamically (Selenium, PyTest, JMeter)." },
+        { step:5,title:"Intelligent Defect Management", description:"Automatically create defects with evidence." },
+        { step:6,title:"Real-Time Reporting", description:"Generate dashboards and send notifications." }
+    ],
+    benefits: [
+        {icon:"🌐", title:"Domain Agnostic", description:"Works across multiple industries."},
+        {icon:"⚡", title:"Fast Automation", description:"Reduces manual test design & execution time."},
+        {icon:"🔗", title:"Full Traceability", description:"From requirements to defects."},
+        {icon:"🤖", title:"AI-Driven", description:"Test design and execution enhanced by AI."}
+    ]
+};
+
+// Populate Tech Stack
+const techStackContainer = document.querySelector(".tech-stack");
+function renderTechStack(filter="") {
+    techStackContainer.innerHTML = "";
+    frameworkData.techStack.forEach(category => {
+        const filteredItems = category.items.filter(i => i.toLowerCase().includes(filter.toLowerCase()));
+        if(filteredItems.length){
+            const catDiv = document.createElement("div");
+            catDiv.className = "tech-category";
+            catDiv.innerHTML = `<h4>${category.category}</h4>
+                                <div class="tech-list">${filteredItems.map(item => `<span class="tech-item">${item}</span>`).join("")}</div>`;
+            techStackContainer.appendChild(catDiv);
+        }
+    });
+}
+renderTechStack();
+document.getElementById("techSearch").addEventListener("input", e=>renderTechStack(e.target.value));
+
+// Populate Workflow (collapsible)
+const workflowContainer = document.querySelector(".workflow");
+frameworkData.workflow.forEach(step => {
+    const stepDiv = document.createElement("div");
+    stepDiv.className = "workflow-step";
+    stepDiv.innerHTML = `<div class="step-number">${step.step}</div>
+                         <div class="step-title"><h4>${step.title}</h4></div>
+                         <div class="step-content"><p>${step.description}</p></div>`;
+    stepDiv.querySelector(".step-title").addEventListener("click", ()=>{
+        const content = stepDiv.querySelector(".step-content");
+        content.classList.toggle("show");
+    });
+    workflowContainer.appendChild(stepDiv);
+});
+
+// Populate Benefits
+const benefitsContainer = document.querySelector(".benefits");
+frameworkData.benefits.forEach(benefit => {
+    const benDiv = document.createElement("div");
+    benDiv.className = "benefit-card";
+    benDiv.innerHTML = `<span class="benefit-icon">${benefit.icon}</span>
+                        <h4>${benefit.title}</h4>
+                        <p>${benefit.description}</p>`;
+    benefitsContainer.appendChild(benDiv);
+});
+
+// Tab Switching
+function showTab(tabName) {
+    document.querySelectorAll(".tab-content").forEach(c=>c.classList.remove("active"));
+    document.getElementById(tabName).classList.add("active");
+    document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+    document.querySelector(`.tab[onclick="showTab('${tabName}')"]`).classList.add("active");
+}
+
+// Layer Details
+function showDetails(layer) {
+    const details = {
+        'requirement': 'The Requirement Agent connects to JIRA APIs to fetch Epics, Features, and User Stories. It then uses NLP models to understand acceptance criteria and automatically generates comprehensive test cases.',
+        'execution': 'The Execution Agent dynamically selects the appropriate testing framework based on test type. Executes tests in parallel with logs and evidence capture.',
+        'defect': 'The Defect Management Agent automatically creates defects in JIRA for failed tests, linking them to test cases and user stories with screenshots and logs.',
+        'reporting': 'The Reporting Agent aggregates execution data and generates dashboards, KPIs, and automated reports via Slack, email, and Confluence.',
+        'orchestration': 'LangGraph orchestrates all agents, handling retries, error recovery, and distributed execution from requirements to reporting.'
+    };
+    alert(details[layer] || 'Layer details not available.');
+}
+
+// Animate Architecture Layers
+document.addEventListener('DOMContentLoaded', ()=>{
+    const layers = document.querySelectorAll('.layer');
+    layers.forEach((layer,index)=>{
+        setTimeout(()=>layer.classList.add("show"), index*150);
+    });
+});
+</script>
+</body>
+</html>
